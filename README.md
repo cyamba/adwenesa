@@ -1,6 +1,6 @@
-# Welcome to YambaCode LLM-Client
+# Welcome to Adwenesa - The YambaCode LLM-Client
 
-Welcome to the **YambaCode LLM-Client**! 
+Welcome to the **YambaCode Adwenesa LLM-Client**! 
 
 This prototype will be part of the YambaCode "Adwene Bone" projects.
 
