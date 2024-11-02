@@ -1,0 +1,48 @@
+server:
+  port: 3141
+
+spring:
+  application:
+    name: LLM-Client
+
+info:
+  app:
+    name: YambaCode LLM-Client
+    description: Client for interacting with language models.
+    version: 1.0.0
+  company:
+    name: YambaCode AB.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+cors:
+  allowed-origin: "http://localhost:63343"
+  allowed-methods: "POST, GET, OPTIONS, DELETE"
+  allowed-headers: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  allow-credentials: "true"
+  max-age: 3600
+
+llm:
+  api:
+    host: localhost
+    port: 1234
+    paths:
+      models: /v1/models
+      predictions: /v1/predictions
+      training: /v1/training
+
+oura:
+  api:
+    host: https://api.ouraring.com
+    port: 443
+
+garmin:
+  api:
+    host: api.garmin.com
+    port: 443
+
+

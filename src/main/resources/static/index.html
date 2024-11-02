@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming AI Response</title>
+    <style>
+        #output {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        #input-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Streaming AI Response</h1>
+<div id="input-container">
+    <label for="prompt">Enter your prompt:</label>
+    <input type="text" id="prompt" />
+    <button onclick="startStreaming()">Start Streaming</button>
+</div>
+<div id="output"></div>
+
+<script>
+    async function startStreaming() {
+        const prompt = document.getElementById('prompt').value;
+        if (!prompt) {
+            alert('Please enter a prompt.');
+            return;
+        }
+
+        const outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = ''; // Clear previous output
+
+        try {
+            const response = await fetch('http://localhost:3141/v1/stream-completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/event-stream'
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.2-3b-instruct', // Example model, adjust as needed
+                    prompt: prompt,
+                    maxTokens: 100 // Adjust as needed
+                })
+            });
+
+            if (!response.body) {
+                throw new Error("ReadableStream not supported in this browser.");
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let done = false;
+
+            while (!done) {
+                const { value, done: readerDone } = await reader.read();
+                done = readerDone;
+                if (value) {
+                    const chunk = decoder.decode(value, { stream: true });
+                    const paragraph = document.createElement('p');
+                    paragraph.textContent = chunk;
+                    outputDiv.appendChild(paragraph);
+                }
+            }
+        } catch (error) {
+            console.error('Error during streaming:', error);
+        }
+    }
+</script>
+</body>
+</html>
